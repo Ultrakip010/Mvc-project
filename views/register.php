@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="/Mvc-project/public/css/style.css">
     <title>Registreren</title>
 </head>
 <body>
@@ -18,5 +18,6 @@
 
     <button type="submit">Registreren</button>
 </form>
+<p>Heb je al een account? <a href="login.php">Log hier in</a></p>
 </body>
 </html>
