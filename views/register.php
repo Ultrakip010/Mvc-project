@@ -6,7 +6,12 @@
 </head>
 <body>
 <h1>Registreer</h1>
-<form method="POST" action="/?action=register">
+
+<?php if (isset($error)): ?>
+    <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+<?php endif; ?>
+
+<form method="POST" action="/Mvc-project/public/index.php">
     <label for="username">Gebruikersnaam:</label>
     <input type="text" id="username" name="username" required>
 
@@ -18,6 +23,7 @@
 
     <button type="submit">Registreren</button>
 </form>
+
 <p>Heb je al een account? <a href="login.php">Log hier in</a></p>
 </body>
 </html>

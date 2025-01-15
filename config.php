@@ -1,16 +1,15 @@
 <?php
-class Database {
-    private static $connection = null;
+// config.php
 
-    public static function connect() {
-        if (self::$connection === null) {
-            try {
-                self::$connection = new PDO('mysql:host=localhost;dbname=blog_project', 'root', '');
-                self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
-                die("Database connection failed: " . $e->getMessage());
-            }
-        }
-        return self::$connection;
-    }
+$host = 'localhost';  // Je hostnaam
+$dbname = 'blog_project';  // Je database naam
+$username = 'root';  // Je database gebruikersnaam
+$password = '';  // Je database wachtwoord
+
+try {
+    // Maak verbinding met de database
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Verbinding mislukt: " . $e->getMessage());
 }
