@@ -20,19 +20,19 @@ class UserModel
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         // Prepared statement om SQL-injecties te voorkomen
-        $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $password);
-        return $stmt->execute();  // Voer de query uit
+        $query = $this->pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
+        $query->bindParam('username', $username);
+        $query->bindParam('email', $email);
+        $query->bindParam('password', $password);
+        return $query->execute();  // Voer de query uit
     }
 
     // Haal een gebruiker op op basis van e-mail
     public function getUserByEmail($email)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);  // Haal het resultaat op
+        $query = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
+        $query->bindParam('email', $email);
+        $query->execute();
+        return $query->fetch(PDO::FETCH_ASSOC);  // Haal het resultaat op
     }
 }
