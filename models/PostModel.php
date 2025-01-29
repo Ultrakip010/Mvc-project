@@ -1,33 +1,32 @@
 <?php
-
-require_once __DIR__ . '/../config.php';
-
-class PostModel
-{
+class PostModel {
     private $db;
 
-    public function __construct()
-    {
-        $this->db = Database::connect();
+    public function __construct() {
+        try {
+            $this->db = new PDO('mysql:host=localhost;dbname=blog_project', 'root', 'at ');
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch(PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
     }
 
-    public function getAllPosts()
-    {
-        $stmt = $this->db->query("SELECT * FROM posts ORDER BY created_at DESC");
+    public function getAllPosts() {
+        $stmt = $this->db->query('SELECT posts.*, users.username FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getPostById($id)
-    {
-        $stmt = $this->db->prepare("SELECT * FROM posts WHERE id = ?");
-        $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function createPost($title, $content)
-    {
-        $stmt = $this->db->prepare("INSERT INTO posts (title, content) VALUES (?, ?)");
-        $stmt->execute([$title, $content]);
+    public function createPost($content, $userId) {
+        try {
+            $stmt = $this->db->prepare('INSERT INTO posts (content, user_id, created_at) VALUES (?, ?, NOW())');
+            $result = $stmt->execute([$content, $userId]);
+            if (!$result) {
+                throw new Exception("Failed to insert post");
+            }
+            return true;
+        } catch (PDOException $e) {
+            throw new Exception("Database error: " . $e->getMessage());
+        }
     }
 }
 

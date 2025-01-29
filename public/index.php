@@ -20,20 +20,20 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'index';
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 
 // Routing logica
-if ($action === 'index') {
-    // Homepagina (bijv. alle posts tonen)
+if ($action === 'index' || $action === '') {
+    // Homepagina (alle posts tonen en mogelijkheid om nieuwe post te maken)
     $controller = new PostController();
     $controller->index();
-
-} elseif ($action === 'detail' && $id) {
-    // Detailpagina van een specifieke post
-    $controller = new PostController();
-    $controller->detail($id);
 
 } elseif ($action === 'create') {
     // Nieuwe post maken
     $controller = new PostController();
     $controller->create();
+
+} elseif ($action === 'detail' && $id) {
+    // Detailpagina van een specifieke post
+    $controller = new PostController();
+    $controller->detail($id);
 
 } elseif ($action === 'register' || $action === 'login') {
     // Gebruikersacties (registreren/inloggen)

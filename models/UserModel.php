@@ -1,38 +1,36 @@
 <?php
+class UserModel {
+    private $db;
 
-// Laad de databaseconfiguratie
-require_once 'config.php';  // Laadt config.php, zodat $pdo beschikbaar is
-
-class UserModel
-{
-    private $pdo;
-
-    public function __construct()
-    {
-        global $pdo;  // Verkrijg de globale $pdo variabele uit config.php
-        $this->pdo = $pdo;  // Zet de $pdo-verbinding in de instantie van UserModel
+    public function __construct() {
+        try {
+            $this->db = new PDO('mysql:host=localhost;dbname=blog_project', 'root', '');
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch(PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
     }
 
-    // Methode om een nieuwe gebruiker te registreren
-    public function registerUser($username, $email, $password)
-    {
-        // Wachtwoord hash maken
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Prepared statement om SQL-injecties te voorkomen
-        $query = $this->pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
-        $query->bindParam('username', $username);
-        $query->bindParam('email', $email);
-        $query->bindParam('password', $password);
-        return $query->execute();  // Voer de query uit
+    public function createUser($username, $password) {
+        try {
+            $stmt = $this->db->prepare('INSERT INTO users (username, password, created_at) VALUES (?, ?, NOW())');
+            $result = $stmt->execute([$username, $password]);
+            if (!$result) {
+                throw new Exception("Failed to insert user");
+            }
+            return true;
+        } catch (PDOException $e) {
+            throw new Exception("Database error: " . $e->getMessage());
+        }
     }
 
-    // Haal een gebruiker op op basis van e-mail
-    public function getUserByEmail($email)
-    {
-        $query = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
-        $query->bindParam('email', $email);
-        $query->execute();
-        return $query->fetch(PDO::FETCH_ASSOC);  // Haal het resultaat op
+    public function getUserByUsername($username) {
+        try {
+            $stmt = $this->db->prepare('SELECT * FROM users WHERE username = ?');
+            $stmt->execute([$username]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Database error: " . $e->getMessage());
+        }
     }
 }

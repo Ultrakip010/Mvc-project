@@ -1,29 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="/Mvc-project/public/css/style.css">
-    <title>Registreren</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
 </head>
 <body>
-<h1>Registreer</h1>
-
-<?php if (isset($error)): ?>
-    <p style="color: red;"><?= htmlspecialchars($error) ?></p>
-<?php endif; ?>
-
-<form method="POST" action="/Mvc-project/public/index.php">
-    <label for="username">Gebruikersnaam:</label>
-    <input type="text" id="username" name="username" required>
-
-    <label for="email">E-mail:</label>
-    <input type="email" id="email" name="email" required>
-
-    <label for="password">Wachtwoord:</label>
-    <input type="password" id="password" name="password" required>
-
-    <button type="submit">Registreren</button>
+<h1>Register</h1>
+<form action="index.php?action=register" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br>
+    <input type="submit" value="Register">
 </form>
-
-<p>Heb je al een account? <a href="login.php">Log hier in</a></p>
 </body>
 </html>
