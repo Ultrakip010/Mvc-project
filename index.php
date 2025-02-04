@@ -1,13 +1,42 @@
 <?php
+// Autoloading for controllers and models
+spl_autoload_register(function ($class_name) {
+    $directories = [
+        'controllers' => __DIR__ . '/controllers/',
+        'models' => __DIR__ . '/models/'
+    ];
 
+    foreach ($directories as $directory) {
+        $file = $directory . $class_name . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+            return;
+        }
+    }
+});
 
-require_once __DIR__ . '/controllers/LoginController.php';
+// Get the action and optional ID from the URL
+$action = isset($_GET['action']) ? $_GET['action'] : 'index';
+$id = isset($_GET['id']) ? $_GET['id'] : null;
 
-$action = $_GET['action'] ?? 'login';
-
-if ($action === 'login') {
-    $controller = new LoginController();
-    $controller->login();
+// Routing logic
+if ($action === 'index' || $action === '') {
+    $controller = new PostController();
+    $controller->index();
+} elseif ($action === 'create') {
+    $controller = new PostController();
+    $controller->create();
+} elseif ($action === 'detail' && $id) {
+    $controller = new PostController();
+    $controller->detail($id);
+} elseif ($action === 'register' || $action === 'login') {
+    $userController = new UserController();
+    if ($action === 'register') {
+        $userController->register();
+    } elseif ($action === 'login') {
+        $userController->login();
+    }
 } else {
-    echo 'Pagina niet gevonden.';
+    echo "404 - Page not found";
 }
+?>

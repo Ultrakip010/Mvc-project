@@ -1,7 +1,4 @@
 <?php
-
-require_once __DIR__ . '/../models/UserModel.php';
-
 class UserController
 {
     private $userModel;
@@ -19,7 +16,7 @@ class UserController
 
             try {
                 if ($this->userModel->createUser($username, $password)) {
-                    header('Location: index.php?action=login');
+                    header('Location: /Mvc-project/index.php?action=login');
                     exit;
                 } else {
                     throw new Exception("Error registering user");
@@ -43,7 +40,7 @@ class UserController
                 if ($user && password_verify($password, $user['password'])) {
                     session_start();
                     $_SESSION['user_id'] = $user['id'];
-                    header('Location: index.php');
+                    header('Location: /Mvc-project/index.php');
                     exit;
                 } else {
                     throw new Exception("Invalid username or password");
